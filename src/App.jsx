@@ -1,6 +1,10 @@
 import React from "react";
-import { Button } from "react-bootstrap";
+import Header from "./layout/Header/";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
+// Custom style
+import "./asset/style/sizing.css"
+import "./asset/style/tag.css"
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -10,7 +14,10 @@ class App extends React.Component {
   render() {
     return (
       <div className="app">
-        <Button>hello world</Button>
+        <BrowserRouter>
+          <Header />
+          <Routes></Routes>
+        </BrowserRouter>
       </div>
     );
   }
