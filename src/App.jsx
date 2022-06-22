@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "react-bootstrap";
 
 class App extends React.Component {
   constructor(props) {
@@ -9,8 +10,7 @@ class App extends React.Component {
   render() {
     return (
       <div className="app">
-        <h1>Hello world</h1>
-        <h1>This is main</h1>
+        <Button>hello world</Button>
       </div>
     );
   }
