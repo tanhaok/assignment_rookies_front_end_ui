@@ -31,4 +31,32 @@
     height: 40%;
 }
 
+/* * FOOTER * */
+.footer > div{
+    width: 33%;
+}
 
+.footer > div >img{
+    width: 5rem;
+}
+
+.dashboard{
+    height: 100vh;
+    width: 20%;
+    align-items: center;
+}
+
+.main-admin{
+    width: 80% !important;
+}
+
+.show-category{
+    width: 90% !important;
+}
+.dashboard-item a{
+    color: white !important;
+}
+
+tr:hover{
+    background-color: aliceblue;
+}

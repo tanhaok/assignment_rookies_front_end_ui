@@ -7,7 +7,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import $ from "jquery";
 import Popper from "popper.js";
 import "bootstrap/dist/js/bootstrap.bundle.min";
-
+// Custom style
+import "./asset/style/sizing.css";
+import "./asset/style/tag.css";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
