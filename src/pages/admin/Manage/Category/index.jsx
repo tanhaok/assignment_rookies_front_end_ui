@@ -72,12 +72,37 @@ class CategoryManage extends React.Component {
             </thead>
             <tbody className="table-group-divider">
               {this.state.data.map((item) => (
-                <tr key={item.id} onClick={(e) => this.handleClick(item.id, e)}>
-                  <th scope="row">{item.id}</th>
-                  <td>{item.name}</td>
-                  <td>{item.des}</td>
-                  <td>{item.lastUpdate.getTime.toString()}</td>
-                </tr>
+                <>
+                  <tr
+                    key={item.id}
+                    onClick={(e) => this.handleClick(item.id, e)}
+                    className=""
+                    data-bs-toggle="modal"
+                    data-bs-target="#test"
+                  >
+                    <th scope="row">{item.id}</th>
+                    <td>{item.name}</td>
+                    <td>{item.des}</td>
+                    <td>{item.lastUpdate.getTime.toString()}</td>
+                  </tr>
+                  {/* Modal to add category */}
+                  <div
+                    className="modal fade"
+                    id="test"
+                    data-bs-backdrop="static"
+                    data-bs-keyboard="false"
+                    tabIndex="-1"
+                    aria-labelledby="staticBackdropLabel"
+                    aria-hidden="true"
+                  >
+                    <Category
+                      action="View"
+                      id={item.id}
+                      cate_name={item.name}
+                      cate_des={item.des}
+                    />
+                  </div>
+                </>
               ))}
             </tbody>
           </table>
@@ -105,62 +130,6 @@ class CategoryManage extends React.Component {
           >
             <Category action="Add" />
           </div>
-
-          {/* =========================================== */}
-
-          <button
-            type="button"
-            data-bs-toggle="modal"
-            data-bs-target="#updateCate"
-            className="btn btn-primary me-1"
-          >
-            Update Category
-          </button>
-
-          {/* Modal to update category */}
-          <div
-            className="modal fade"
-            id="updateCate"
-            data-bs-backdrop="static"
-            data-bs-keyboard="false"
-            tabIndex="-1"
-            aria-labelledby="staticBackdropLabel"
-            aria-hidden="true"
-          >
-            <Category
-              action="Update"
-              id={this.state.category.id}
-              name={this.state.category.name}
-              des={this.state.category.des}
-            />
-          </div>
-
-          <button
-            type="button"
-            data-bs-toggle="modal"
-            data-bs-target="#deleteCate"
-            className="btn btn-primary me-1"
-          >
-            Delete Category
-          </button>
-
-          {/* Modal to delete category */}
-          <div
-            className="modal fade"
-            id="deleteCate"
-            data-bs-backdrop="static"
-            data-bs-keyboard="false"
-            tabIndex="-1"
-            aria-labelledby="staticBackdropLabel"
-            aria-hidden="true"
-          >
-            <Category
-              action="Delete"
-              id={this.state.category.id}
-              cate_name={this.state.category.name}
-              cate_des={this.state.category.des}
-            />
-          </div>
         </div>
       </div>
     );
@@ -168,3 +137,5 @@ class CategoryManage extends React.Component {
 }
 
 export default CategoryManage;
+
+// TODO: Add field number of book have same category

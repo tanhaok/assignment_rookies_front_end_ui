@@ -6,7 +6,8 @@ class Category extends React.Component {
     this.state = {
       action: this.props.action,
       cate_name: this.props.cate_name,
-      cate_des:this.props.cate_des,
+      cate_des: this.props.cate_des,
+      cate_id: this.props.id,
     };
 
     this.handleTextChange = this.handleTextChange.bind(this);
@@ -17,14 +18,9 @@ class Category extends React.Component {
   }
 
   render() {
-    let title = "Category Have id: " + this.props.id;
-    let action = this.state.action;
-    if (action === "Update") {
-      title = "Update " + title;
-    } else if (action === "Delete") {
-      title = "Delete " + title;
-    } else {
-      title = "Create New Category";
+    let title = "Create New Category";
+    if(this.state.action === "View"){
+      title = "Category"
     }
     return (
       <div className="modal-dialog modal-dialog-centered">
@@ -52,7 +48,7 @@ class Category extends React.Component {
                 placeholder="name..."
                 name="name"
                 onChange={this.handleTextChange}
-                value={this.state.name}
+                value={this.state.cate_name}
               />
             </div>
             <div className="mb-3">
@@ -62,10 +58,10 @@ class Category extends React.Component {
               <textarea
                 className="form-control"
                 id="description_category"
-                rows="3"
+                rows="5"
                 name="des"
                 onChange={this.handleTextChange}
-                value={this.state.des}
+                value={this.state.cate_des}
               ></textarea>
             </div>
           </div>
@@ -77,8 +73,18 @@ class Category extends React.Component {
             >
               Close
             </button>
+            {this.state.cate_id && (
+              <>
+                <button type="button" className="btn btn-primary">
+                  Edit
+                </button>
+                <button type="button" className="btn btn-primary">
+                  Delete
+                </button>
+              </>
+            )}
             <button type="button" className="btn btn-primary">
-              {this.state.action}
+              Save
             </button>
           </div>
         </div>
