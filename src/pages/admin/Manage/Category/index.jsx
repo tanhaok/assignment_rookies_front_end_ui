@@ -1,72 +1,52 @@
 import React from "react";
 import { Category } from "../../../../components";
+import axios from "axios";
+import moment from "moment";
 class CategoryManage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      data :[
-        {
-          id:1,
-          name: "fiction",
-          des: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Soluta, unde hic, delectus obcaecati accusantium exercitationem similique tempore amet, sint rerum ipsum sequi cupiditate quos nam laborum omnis alias repellendus dolore!",
-          lastUpdate: new Date(),
-        },
-        {
-          id:2,
-          name: "fiction",
-          des: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Soluta, unde hic, delectus obcaecati accusantium exercitationem similique tempore amet, sint rerum ipsum sequi cupiditate quos nam laborum omnis alias repellendus dolore!",
-          lastUpdate: new Date(),
-        },
-        {
-          id:3,
-          name: "fiction",
-          des: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Soluta, unde hic, delectus obcaecati accusantium exercitationem similique tempore amet, sint rerum ipsum sequi cupiditate quos nam laborum omnis alias repellendus dolore!",
-          lastUpdate: new Date(),
-        },
-        {
-          id:4,
-          name: "fiction",
-          des: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Soluta, unde hic, delectus obcaecati accusantium exercitationem similique tempore amet, sint rerum ipsum sequi cupiditate quos nam laborum omnis alias repellendus dolore!",
-          lastUpdate: new Date(),
-        },
-        {
-          id:5,
-          name: "fiction",
-          des: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Soluta, unde hic, delectus obcaecati accusantium exercitationem similique tempore amet, sint rerum ipsum sequi cupiditate quos nam laborum omnis alias repellendus dolore!",
-          lastUpdate: new Date(),
-        },{
-          id:6,
-          name: "fiction",
-          des: "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Soluta, unde hic, delectus obcaecati accusantium exercitationem similique tempore amet, sint rerum ipsum sequi cupiditate quos nam laborum omnis alias repellendus dolore!",
-          lastUpdate: new Date(),
-        },
-      ],
-      category: {
-        id:"",
-        name:"",
-        des:"",
-      }
-
+      data: [],
     };
-
-    this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick(index, e){
-    const data = this.state.data;
-    this.setState({category : data[index-1]})
+  async componentDidMount() {
+    await axios({
+      headers: {
+        "content-type": "application/json",
+      },
+      method: "GET",
+      url: "http://localhost:8080/category",
+    })
+      .then((res) => {
+        this.setState({ data: res.data });
+      })
+      .catch((error) => {
+        if (error.response) {
+          // Request made and server responded
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          console.log(error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log("Error", error.message);
+        }
+      });
   }
-
   render() {
     return (
       <div className="main-admin category-manage d-flex flex-column align-items-center justify-content-center">
         <div className="show-category mb-3">
-          <table className="table">
+          <table className="table table-responsive">
             <thead className="table-dark">
               <tr>
                 <th scope="col">#</th>
                 <th scope="col">Name</th>
                 <th scope="col">Description</th>
+                <th scope="col">Create Date</th>
                 <th scope="col">Last Update</th>
               </tr>
             </thead>
@@ -75,20 +55,20 @@ class CategoryManage extends React.Component {
                 <>
                   <tr
                     key={item.id}
-                    onClick={(e) => this.handleClick(item.id, e)}
                     className=""
                     data-bs-toggle="modal"
-                    data-bs-target="#test"
+                    data-bs-target={"#viewCate" + item.id}
                   >
-                    <th scope="row">{item.id}</th>
+                    <th scope="row">{item.status}</th>
                     <td>{item.name}</td>
-                    <td>{item.des}</td>
-                    <td>{item.lastUpdate.getTime.toString()}</td>
+                    <td>{item.description}</td>
+                    <td>{moment(item.createDate).format("LLL")}</td>
+                    <td>{moment(item.updateDate).format("LLL")}</td>
                   </tr>
                   {/* Modal to add category */}
                   <div
                     className="modal fade"
-                    id="test"
+                    id={"viewCate" + item.id}
                     data-bs-backdrop="static"
                     data-bs-keyboard="false"
                     tabIndex="-1"
@@ -99,7 +79,7 @@ class CategoryManage extends React.Component {
                       action="View"
                       id={item.id}
                       cate_name={item.name}
-                      cate_des={item.des}
+                      cate_des={item.description}
                     />
                   </div>
                 </>
