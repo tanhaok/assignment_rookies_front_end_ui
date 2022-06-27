@@ -1,59 +1,51 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-class Category extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      action: this.props.action,
-      cate_name: this.props.cate_name,
-      cate_des: this.props.cate_des,
-      cate_id: this.props.id,
-      hasEdit: false,
-      error: null,
-      success: null,
-    };
 
-    this.handleTextChange = this.handleTextChange.bind(this);
-    this.handleEditButton = this.handleEditButton.bind(this);
-    this.handleChangeStatusButton = this.handleChangeStatusButton.bind(this);
-    this.handleSaveButton = this.handleSaveButton.bind(this);
-  }
+const Category = (props) => {
+  const [hasEdit, setHasEdit] = useState(false);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
+  const [cateName, setCateName] = useState(props.cate_name);
+  const [cateDescription, setCateDescription] = useState(props.cate_des);
 
-  componentDidMount() {
-    let action = this.state.action;
+  const initialView = () => {
+    let action = props.action;
     if (action === "View") {
-      this.setState({ hasEdit: true });
+      setHasEdit(true);
     }
-  }
 
-  handleEditButton() {
-    this.setState({ hasEdit: false });
-  }
+    console.log(props.id);
+  };
 
-  async handleChangeStatusButton() {
-    let id = this.state.cate_id;
-    console.log(id);
+  useEffect(() => {
+    initialView();
+  });
+
+  const handleClick_EditButton = () => {
+    setHasEdit(false);
+  };
+
+  const handleChangeStatusButton = async () => {
+    let id = props.id;
     await axios({
       headers: { "content-type": "application/json" },
       method: "PATCH",
       url: `http://localhost:8080/category/${id}`,
     })
       .then((res) => {
-        this.setState({ success: "Status was change to: " + res.data.status });
+        setSuccess("Status was change to: " + res.data.status);
       })
       .catch((err) => {
-        console.log(err);
-        this.setState({ error: err.message });
+        setError(err.message);
       });
-  }
+  };
 
-  async handleSaveButton() {
-    let hasEdit = this.state.hasEdit;
-    let action = this.state.action;
+  const handleSaveButton = async () => {
+    let action = props.action;
 
-    let id = this.state.cate_id;
-    let name = this.state.cate_name;
-    let des = this.state.cate_des;
+    let id = props.id;
+    let name = cateName;
+    let des = cateDescription;
 
     if (name && des) {
       if (action === "View") {
@@ -66,13 +58,15 @@ class Category extends React.Component {
             cateDescription: des,
           },
         })
-          .then((res) => {
-            this.setState({ success: "Category was changed successfully" });
+          .then(() => {
+            setSuccess("Category was changed successfully");
           })
           .catch((err) => {
             console.log(err);
+            setError(err);
           });
-        this.setState({ hasEdit: true });
+
+        setHasEdit(true);
       } else {
         await axios({
           headers: { "content-type": "application/json" },
@@ -83,122 +77,118 @@ class Category extends React.Component {
             cateDescription: des,
           },
         })
-          .then((res) => {
-            this.setState({ success: "Category was created successfully" });
+          .then(() => {
+            setSuccess("Category was created successfully");
           })
           .catch((err) => {
             console.log(err);
           });
       }
     } else {
-      this.setState({ error: "All field are required" });
+      setError("All field are required");
     }
+  };
+
+  const handleTextChange = () => {
+    setError(null);
+  };
+
+  let title = "Create New Category";
+  if (props.action === "View") {
+    title = "Category";
   }
-
-  handleTextChange(e) {
-    this.setState({ [e.target.name]: e.target.value, error: null });
-  }
-
-  render() {
-    let title = "Create New Category";
-    if (this.state.action === "View") {
-      title = "Category";
-    }
-    return (
-      <div className="modal-dialog modal-dialog-centered">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title" id="staticBackdropLabel">
-              {title}
-              {this.state.error && (
-                <p className="text-danger fs-6 text-opacity-50">
-                  {this.state.error}
-                </p>
-              )}
-
-              {this.state.success && (
-                <p className="text-success fs-6 text-opacity-50">
-                  {this.state.success}
-                </p>
-              )}
-            </h5>
-            <button
-              type="button"
-              className="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
-          </div>
-          <div className="modal-body">
-            <div className="mb-3">
-              <label for="name_category" className="form-label">
-                Category Name
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="name_category"
-                placeholder="name..."
-                name="cate_name"
-                onChange={this.handleTextChange}
-                value={this.state.cate_name}
-                disabled={this.state.hasEdit}
-              />
-            </div>
-            <div className="mb-3">
-              <label for="description_category" className="form-label">
-                Category Description
-              </label>
-              <textarea
-                className="form-control"
-                id="description_category"
-                rows="5"
-                name="cate_des"
-                onChange={this.handleTextChange}
-                value={this.state.cate_des}
-                disabled={this.state.hasEdit}
-              ></textarea>
-            </div>
-          </div>
-          <div className="modal-footer">
-            <button
-              type="button"
-              className="btn btn-secondary"
-              data-bs-dismiss="modal"
-              onClick={() => window.location.reload()}
-            >
-              Close
-            </button>
-            {this.state.cate_id && (
-              <>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={this.handleEditButton}
-                >
-                  Edit
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={this.handleChangeStatusButton}
-                >
-                  Change Status
-                </button>
-              </>
+  return (
+    <div className="modal-dialog modal-dialog-centered">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title" id="staticBackdropLabel">
+            {title}
+            {error && (
+              <p className="text-danger fs-6 text-opacity-50">{error}</p>
             )}
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={this.handleSaveButton}
-            >
-              Save
-            </button>
+
+            {success && (
+              <p className="text-success fs-6 text-opacity-50">{success}</p>
+            )}
+          </h5>
+          <button
+            type="button"
+            className="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div className="modal-body">
+          <div className="mb-3">
+            <label for="name_category" className="form-label">
+              Category Name
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              id="name_category"
+              placeholder="name..."
+              name="cate_name"
+              onChange={(e) => setCateName(e.target.value)}
+              onFocus={handleTextChange}
+              value={cateName}
+              disabled={hasEdit}
+            />
+          </div>
+          <div className="mb-3">
+            <label for="description_category" className="form-label">
+              Category Description
+            </label>
+            <textarea
+              className="form-control"
+              id="description_category"
+              rows="5"
+              name="cate_des"
+              onChange={(e) => setCateDescription(e.target.value)}
+              value={cateDescription}
+              disabled={hasEdit}
+              onBlur={handleTextChange}
+            ></textarea>
           </div>
         </div>
+        <div className="modal-footer">
+          <button
+            type="button"
+            className="btn btn-secondary"
+            data-bs-dismiss="modal"
+            onClick={() => window.location.reload()}
+          >
+            Close
+          </button>
+          {props.id && (
+            <>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleClick_EditButton}
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleChangeStatusButton}
+              >
+                Change Status
+              </button>
+            </>
+          )}
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={handleSaveButton}
+          >
+            Save
+          </button>
+        </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default Category;
