@@ -81,21 +81,22 @@ const Product = (props) => {
       // collect data and send to backend
 
       const data = JSON.stringify({
-        productName: name,
-        productDescription: description,
-        productAmount: amount,
-        productPrice: price,
+        name: name,
+        description: description,
+        amount: amount,
+        price: price,
         categoryId: category,
         images: urlImages,
       });
-      
-      createProduct(data).then((res) =>{
-        setSuccess(res.message);
-      })
-      .catch((err) => {
-        console.log(err)
-        setError(err.message)
-      })
+
+      createProduct(data)
+        .then((res) => {
+          setSuccess("success");
+        })
+        .catch((err) => {
+          console.log(err);
+          setError(err.message);
+        });
 
       console.log(data);
 
@@ -153,6 +154,7 @@ const Product = (props) => {
                   id="categoryGroupSelect"
                   onChange={(e) => setCategory(e.target.value)}
                 >
+                  <option value={0}>None</option>
                   {listCategory.map((cate) => (
                     <option value={cate.id} key={cate.id}>
                       {cate.name}
