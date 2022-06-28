@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import {
+  deleteCategory,
+  updateCategory,
+  createCategory,
+} from "../../service/CategoryService.js";
 
 const Category = (props) => {
   const [hasEdit, setHasEdit] = useState(false);
@@ -13,13 +17,11 @@ const Category = (props) => {
     if (action === "View") {
       setHasEdit(true);
     }
-
-    console.log(props.id);
   };
 
   useEffect(() => {
     initialView();
-  });
+  }, []);
 
   const handleClick_EditButton = () => {
     setHasEdit(false);
@@ -27,11 +29,7 @@ const Category = (props) => {
 
   const handleChangeStatusButton = async () => {
     let id = props.id;
-    await axios({
-      headers: { "content-type": "application/json" },
-      method: "PATCH",
-      url: `http://localhost:8080/category/${id}`,
-    })
+    deleteCategory(id)
       .then((res) => {
         setSuccess("Status was change to: " + res.data.status);
       })
@@ -49,15 +47,7 @@ const Category = (props) => {
 
     if (name && des) {
       if (action === "View") {
-        await axios({
-          headers: { "content-type": "application/json" },
-          method: "PUT",
-          url: `http://localhost:8080/category/${id}`,
-          data: {
-            cateName: name,
-            cateDescription: des,
-          },
-        })
+        updateCategory(id, name, des)
           .then(() => {
             setSuccess("Category was changed successfully");
           })
@@ -68,15 +58,7 @@ const Category = (props) => {
 
         setHasEdit(true);
       } else {
-        await axios({
-          headers: { "content-type": "application/json" },
-          method: "POST",
-          url: `http://localhost:8080/category/`,
-          data: {
-            cateName: name,
-            cateDescription: des,
-          },
-        })
+        createCategory(name, des)
           .then(() => {
             setSuccess("Category was created successfully");
           })

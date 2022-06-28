@@ -2,34 +2,18 @@ import React, { useEffect, useState } from "react";
 import { Category } from "../../../../components";
 import axios from "axios";
 import moment from "moment";
+import { getAllCategory } from "../../../../service/CategoryService.js";
 
 const CategoryManage = () => {
   const [data, setData] = useState([]);
 
-  const getDataFromAPI = async () => {
-    await axios({
-      headers: {
-        "content-type": "application/json",
-      },
-      method: "GET",
-      url: "http://localhost:8080/category",
-    })
+  const getDataFromAPI = () => {
+    getAllCategory()
       .then((res) => {
         setData(res.data);
       })
-      .catch((error) => {
-        if (error.response) {
-          // Request made and server responded
-          console.log(error.response.data);
-          console.log(error.response.status);
-          console.log(error.response.headers);
-        } else if (error.request) {
-          // The request was made but no response was received
-          console.log(error.request);
-        } else {
-          // Something happened in setting up the request that triggered an Error
-          console.log("Error", error.message);
-        }
+      .catch((err) => {
+        console.log(err);
       });
   };
 
@@ -37,7 +21,7 @@ const CategoryManage = () => {
     getDataFromAPI();
     console.log(data);
   }, []);
-  
+
   return (
     <div className="main-admin category-manage d-flex flex-column align-items-center justify-content-center">
       <div className="show-category mb-3">
