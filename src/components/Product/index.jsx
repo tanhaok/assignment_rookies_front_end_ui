@@ -19,6 +19,7 @@ const Product = (props) => {
 
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+  const [hasUpload, setHasUpload] = useState(true);
 
   const getDataFromAPI = () => {
     getAllCategory()
@@ -47,46 +48,54 @@ const Product = (props) => {
     setSuccess(null);
   };
 
-  // TODO: send data to server and save them
-  // TODO: custom query to get what function need
-  // TODO: custom all api to folder service
-
-  const createNewProduct = () => {
-    if (description && files && name && price && amount && category) {
-      // Upload images and get images url
+  const uploadImages = () => {
+    if (files) {
+      let count = 0;
+      console.log(files.length);
       files.forEach((ele) => {
-        console.log(ele);
         const storageRef = ref(
           storage,
           `/images/${name + "_" + ele.name + "_" + ele.lastModified}`
         );
-
         const uploadTask = uploadBytesResumable(storageRef, ele);
-
         uploadTask.on(
           "state_changed",
           (snapshot) => {},
           (err) => console.log(err),
           () => {
             // download url
-            getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-              const list = [...urlImages];
-              list.push(url);
-              setUrlImages(list);
-            });
+            getDownloadURL(uploadTask.snapshot.ref)
+              .then((url) => {
+                let list = urlImages;
+                list.push(url);
+                setUrlImages(list);
+                count = count + 1;
+                if (count === files.length) {
+                  setHasUpload(false);
+                }
+              })
+              .catch((err) => {
+                console.log(err);
+              });
           }
         );
       });
+    } else {
+      setError("No files image was upload yet!");
+    }
+  };
 
+  const createNewProduct = async () => {
+    if (description && urlImages && name && price && amount && category) {
       // collect data and send to backend
-
+      console.log(urlImages.length);
       const data = JSON.stringify({
         name: name,
         description: description,
         amount: amount,
         price: price,
         categoryId: category,
-        images: urlImages,
+        images: [...urlImages],
       });
 
       createProduct(data)
@@ -99,8 +108,6 @@ const Product = (props) => {
         });
 
       console.log(data);
-
-      //TODO reset all fields to blank
     } else {
       setError("All fields are required!");
     }
@@ -244,8 +251,22 @@ const Product = (props) => {
               </div>
 
               {/* Button create new product */}
-              <div className="col-md-12 btn-save ">
-                <button className="btn-primary btn" onClick={createNewProduct}>
+              <div className="col-md-6 btn-save ">
+                <button
+                  className="btn-primary btn"
+                  onClick={uploadImages}
+                  disabled={!hasUpload}
+                >
+                  Upload Image
+                </button>
+              </div>
+
+              <div className="col-md-6 btn-save ">
+                <button
+                  className="btn-primary btn"
+                  onClick={createNewProduct}
+                  disabled={hasUpload}
+                >
                   Create New Product
                 </button>
               </div>
