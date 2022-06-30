@@ -9,7 +9,7 @@ const baseUrl = "http://localhost:8080/product";
 export const getAllProduct = () => {
   return axios({
     headers: header,
-    url: baseUrl,
+    url: baseUrl + "/all",
     method: "GET",
   });
 };

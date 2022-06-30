@@ -9,7 +9,7 @@ class Dashboard extends React.Component {
 
   render() {
     return (
-      <div className="dashboard d-flex flex-column bg-black text-white">
+      <div className="dashboard d-flex flex-column bg-black text-white position-fixed">
         <div className="dashboard-item title fs-1 pb-3">
           <Link to={"/admin"}>Admin</Link>
         </div>
