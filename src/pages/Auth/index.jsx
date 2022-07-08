@@ -12,7 +12,6 @@ const SignIn = () => {
   const [role, setRole] = useState();
 
   const onSubmit = (data) => {
-    alert(JSON.stringify(data));
     LogIn(data)
       .then((res) => {
         sessionStorage.clear();
@@ -71,12 +70,60 @@ const SignIn = () => {
     </div>
   );
 };
-
+// TODO: check is exist username in db
 const SignUp = () => {
+  const { register, handleSubmit } = useForm();
+  const [error, setError] = useState("");
+  const [role, setRole] = useState();
+
+  const onSubmit = (data) => {
+    Register(data)
+      .then((res) => {
+        sessionStorage.clear();
+        localStorage.setItem("token", res.data.accessToken);
+        localStorage.setItem("accId", res.data.accId);
+        localStorage.setItem("username", res.data.username);
+        setRole(res.data.role);
+        console.log(res.data);
+      })
+      .catch((error) => {
+        setError("Can not register");
+        console.log(error);
+      });
+  };
   return (
-    <div className="register">
-      <h1>this is login logout page</h1>
-    </div>
+    <>
+      {role === "USER" && <Navigate to={"/"}></Navigate>}
+      {role === "ADMIN" && <Navigate to={"/admin"}></Navigate>}
+      <div className="register">
+        <div className="form">
+          {error && <div className="text-danger">{error}</div>}
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <input
+              type="email"
+              {...register("email", { required: true, maxLength: 30 })}
+            />
+            <input
+              {...register("username", { required: true, maxLength: 20 })}
+            />
+            <input
+              type="password"
+              {...register("password", { required: true, maxLength: 20 })}
+            />
+            <input
+              {...register("address", { required: true, maxLength: 20 })}
+            />
+            <input
+              type="number"
+              {...register("phone", {
+                required: true,
+              })}
+            />
+            <input type="submit" />
+          </form>
+        </div>
+      </div>
+    </>
   );
 };
 
