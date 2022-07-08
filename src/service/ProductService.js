@@ -22,6 +22,14 @@ export const getAllProductTrading = () => {
   });
 };
 
+export const getAllProductTradingByCateId = (id) => {
+  return axios({
+    headers: header,
+    url: baseUrl + `/category/${id}`,
+    method: "GET",
+  });
+};
+
 export const updateProduct = (id, data) => {
   return axios({
     headers: header,

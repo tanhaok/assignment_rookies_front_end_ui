@@ -8,7 +8,7 @@ import {
 import { useEffect, useState } from "react";
 import { Card, Pagination } from "react-bootstrap";
 import { Navigate } from "react-router-dom";
-import { getAllProductTrading } from "../../service/ProductService.js";
+import { getAllProductTradingByCateId } from "../../service/ProductService.js";
 
 export const ViewAllProduct = (props) => {
   const [product, setProduct] = useState([]);
@@ -21,8 +21,7 @@ export const ViewAllProduct = (props) => {
   }, [activePage]);
 
   const getProduct = (e) => {
-    // "get by";
-    getAllProductTrading()
+    getAllProductTradingByCateId(props.cateId)
       .then((res) => {
         setProduct(res.data);
       })
