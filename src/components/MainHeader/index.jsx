@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { BranchIcon, SearchIcon, ShoppingCartIcon } from "../../utils/Icon";
+import {
+  BranchIcon,
+  SearchIcon,
+  ShoppingCartIcon,
+  LogOutIcon,
+} from "../../utils/Icon";
 
 const MainHeader = () => {
   const [searchContent, setSearchContent] = useState("");
+  const [username, setUsername] = useState();
 
   const textChangeHandle = (e) => {
     setSearchContent(e.target.value);
@@ -12,6 +18,18 @@ const MainHeader = () => {
 
   const searchProduct = () => {
     alert(searchContent);
+  };
+
+  useEffect(() => {
+    const isExistsUsername = localStorage.getItem("username");
+    if (isExistsUsername) {
+      setUsername(isExistsUsername);
+    }
+  }, []);
+
+  const logout = () => {
+    localStorage.clear();
+    window.location.reload();
   };
   return (
     <div className="main_header d-flex justify-content-between align-items-end w-100">
@@ -42,17 +60,29 @@ const MainHeader = () => {
 
       <div className="header_auth d-flex align-items-center">
         {/* TODO: has log in yet? */}
-        <Link to={"auth"}>
-          <span className="btn btn-outline-primary">Log In/Register</span>
-        </Link>
-        <Link to={"cart"} className="shopping-cart me-2 ms-2">
-          <img
-            className="shop_icon"
-            src={ShoppingCartIcon}
-            alt="shopping cart"
-          />
-          {/* TODO: view number of item in cart when cart have item */}
-        </Link>
+        {username ? (
+          <>
+            <span className="btn btn-outline-primary">{username}</span>
+            <Link to={"cart"} className="shopping-cart me-2 ms-2">
+              <img
+                className="shop_icon"
+                src={ShoppingCartIcon}
+                alt="shopping cart"
+              />
+              {/* TODO: view number of item in cart when cart have item */}
+            </Link>
+            <img
+              className="shop_icon"
+              src={LogOutIcon}
+              alt="shopping cart"
+              onClick={logout}
+            />
+          </>
+        ) : (
+          <Link to={"login"}>
+            <span className="btn btn-outline-primary">Log In/Register</span>
+          </Link>
+        )}
       </div>
     </div>
   );

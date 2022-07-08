@@ -1,6 +1,5 @@
 import React from "react";
 import MainHeader from "../../components/MainHeader";
-import Navbar from "../../components/Navbar";
 
 class Header extends React.Component {
   constructor(props) {
@@ -12,7 +11,6 @@ class Header extends React.Component {
     return (
       <div className="header d-flex flex-column p-2">
         <MainHeader />
-        <Navbar />
       </div>
     );
   }

@@ -14,6 +14,14 @@ export const getAllProduct = () => {
   });
 };
 
+export const getAllProductTrading = () => {
+  return axios({
+    headers: header,
+    url: baseUrl ,
+    method: "GET",
+  });
+};
+
 export const updateProduct = (id, data) => {
   return axios({
     headers: header,
@@ -37,5 +45,13 @@ export const createProduct = (data) => {
     method: "POST",
     url: baseUrl,
     data: data,
+  });
+};
+
+export const getProductById = (id) => {
+  return axios({
+    headers: header,
+    url: baseUrl + `/${id}`,
+    method: "GET",
   });
 };

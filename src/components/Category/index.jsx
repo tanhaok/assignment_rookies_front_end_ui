@@ -61,6 +61,8 @@ const Category = (props) => {
         createCategory(name, des)
           .then(() => {
             setSuccess("Category was created successfully");
+            setCateName("");
+            setCateDescription("");
           })
           .catch((err) => {
             console.log(err);
@@ -72,6 +74,7 @@ const Category = (props) => {
   };
 
   const handleTextChange = () => {
+    setSuccess("");
     setError(null);
   };
 

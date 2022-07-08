@@ -1,5 +1,6 @@
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { Card } from "react-bootstrap";
 import Product from "../Product";
 
 export const CardHorizontal = (props) => {
@@ -124,5 +125,24 @@ export const CardHorizontal = (props) => {
         </div>
       </div>
     </div>
+  );
+};
+
+export const CardVertical = (props) => {
+  return (
+    <Card style={{ width: "18rem" }}>
+      <Card.Img
+        variant="top"
+        src="https://sachdenroi.com/wp-content/uploads/2020/04/di-tim-le-song-2-2.jpg"
+      />
+      <Card.Body>
+        <Card.Title className="text-muted fs-5 overflow-hidden">
+          Man's Search For Meaning
+        </Card.Title>
+        <Card.Text>
+         
+        </Card.Text>
+      </Card.Body>
+    </Card>
   );
 };
