@@ -77,6 +77,7 @@ const SignUp = () => {
   const [role, setRole] = useState();
 
   const onSubmit = (data) => {
+    console.log(data);
     Register(data)
       .then((res) => {
         sessionStorage.clear();
@@ -84,7 +85,6 @@ const SignUp = () => {
         localStorage.setItem("accId", res.data.accId);
         localStorage.setItem("username", res.data.username);
         setRole(res.data.role);
-        console.log(res.data);
       })
       .catch((error) => {
         setError("Can not register");
