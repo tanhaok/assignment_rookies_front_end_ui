@@ -1,60 +1,53 @@
-import { Rating } from "@mui/material";
-import { useState } from "react";
+import { Rating, TextField } from "@mui/material";
+import { useEffect, useState } from "react";
 import { Button, Carousel } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { getProductById } from "../../service/ProductService";
+import { addNewPost } from "../../service/RateService";
 
 const ViewProduct = () => {
   let { id } = useParams();
   const [product, setProduct] = useState();
-  const rate = [
-    {
-      rate: 3,
-      comment: "This is best of the book I have read before",
-    },
-    {
-      rate: 5,
-      comment:
-        "To make the journey into The Power of Now, we will need to leave our analytical mind and its false created self, the ego, behind. ",
-    },
-    {
-      rate: 2,
-      comment:
-        " Although the journey is challenging, Eckhart Tolle offers simple language and a question and answer format to guide us.",
-    },
-    {
-      rate: 2,
-      comment:
-        " Surrender to the present moment, where problems do not exist.  It is here we find our joy,",
-    },
-    {
-      rate: 6,
-      comment:
-        " are able to embrace our true selves and discover that we are already complete and perfect. ",
-    },
-    {
-      rate: 5,
-      comment: "If we are able to be fully present and take each step in ",
-    },
-    {
-      rate: 4,
-      comment:
-        "the Now we will be opening ourselves to the transforming experience of The Power of Now. ",
-    },
-  ];
+  const [newRate, setNewRate] = useState();
+  const [newComment, setNewComment] = useState("");
+  const [isLogin, setIsLogin] = useState(false);
 
-  useState(() => {
+  const [success, setSuccess] = useState();
+
+  useEffect(() => {
     if (id) {
       getProductById(id)
         .then((res) => {
           setProduct(res.data);
-          console.log();
+          console.log(res.data);
         })
         .catch((error) => {
           console.log(error);
         });
     }
+
+    if (localStorage.getItem("accId") !== null) {
+      setIsLogin(true);
+    }
   }, []);
+
+  const postComment = () => {
+    const data = {
+      accId: localStorage.getItem("accId"),
+      proId: id,
+      rate: newRate,
+      comment: newComment,
+    };
+
+    addNewPost(data)
+      .then((res) => {
+        setSuccess(res.data.message);
+      })
+      .catch((error) => {
+        setSuccess("You have reviewed this book before");
+      });
+  };
+
   if (product) {
     return (
       <div
@@ -63,7 +56,10 @@ const ViewProduct = () => {
       >
         <div
           className="product-details d-flex w-75 justify-content-center"
-          style={{ padding: "3rem" }}
+          style={{
+            padding: "3rem",
+            boxShadow: " 0px 1px 4px rgba(0, 0, 0, 0.16)",
+          }}
         >
           <div
             className="product-image w-25"
@@ -91,7 +87,7 @@ const ViewProduct = () => {
               <div className="star">
                 <Rating
                   name="half-rating-read small"
-                  defaultValue={3}
+                  defaultValue={product.rate}
                   precision={0.5}
                   readOnly
                 />
@@ -106,25 +102,76 @@ const ViewProduct = () => {
         <div className="product-show-more w-75">
           <div
             className="product-description w-100 text-center"
-            style={{ padding: "1rem" }}
+            style={{
+              padding: "1rem",
+              boxShadow: " 0px 1px 4px rgba(0, 0, 0, 0.16)",
+              marginTop: "1rem",
+            }}
           >
             <div className="fs-5 text-decoration-underline">Description: </div>
             <div className=" text-break">{product.description}</div>
           </div>
-          <div className="product-rate">
-            {rate.map((ele) => (
-              <div className="rate">
-                <div className="star">
+          <div
+            className="product-rate "
+            style={{
+              boxShadow: " 0px 1px 4px rgba(0, 0, 0, 0.16)",
+              marginTop: "1rem",
+              padding: "1rem",
+            }}
+          >
+            <div className="show-rate">
+              {(product.productRates || []).map((ele) => (
+                <div className="rate">
+                  <div className="star">
+                    <Rating
+                      name="half-rating-read small"
+                      defaultValue={ele.rate}
+                      precision={0.5}
+                      readOnly
+                    />
+                  </div>
+                  <div className="comment">{ele.comment}</div>
+                </div>
+              ))}
+            </div>
+
+            <div
+              className="new-rate border-top d-flex justify-content-between"
+              style={{ padding: "1rem" }}
+            >
+              {isLogin ? (
+                <>
+                  <div className="fs-4 text-muted">
+                    Write your comment:<br></br>{" "}
+                    <small className="text-success">{success}</small>
+                  </div>
                   <Rating
                     name="half-rating-read small"
-                    defaultValue={ele.rate}
+                    defaultValue={newRate}
                     precision={0.5}
-                    readOnly
+                    onChange={(e) => setNewRate(e.target.value)}
                   />
+                  <TextField
+                    id="outlined-basic"
+                    label="Comment"
+                    variant="outlined"
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    type="text"
+                    className="w-50"
+                  />
+
+                  <Button variant="primary" onClick={postComment}>
+                    Post
+                  </Button>
+                </>
+              ) : (
+                <div>
+                  {" "}
+                  Want to write comment? <Link to={"/login"}>Login Now</Link>
                 </div>
-                <div className="comment">{ele.comment}</div>
-              </div>
-            ))}
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -135,5 +182,3 @@ const ViewProduct = () => {
 };
 
 export default ViewProduct;
-
-// TODO: change max length of product description in db

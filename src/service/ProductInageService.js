@@ -4,7 +4,7 @@ const header = {
   "content-type": "application/json",
 };
 
-const baseUrl = "http://localhost:8080/image";
+const baseUrl = "http://localhost:8080/api/v1/image";
 
 export const deleteImage = (id) => {
   return axios({

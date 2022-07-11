@@ -4,7 +4,7 @@ const header = {
   "content-type": "application/json",
 };
 
-const baseUrl = "http://localhost:8080/product";
+const baseUrl = "http://localhost:8080/api/v1/product";
 
 export const getAllProduct = () => {
   return axios({
