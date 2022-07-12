@@ -30,7 +30,8 @@ const Home = (props) => {
   }
 
   const getData = () => {
-    getAllCategory()
+    let token = localStorage.getItem("token");
+    getAllCategory(token)
       .then((res) => {
         setCate(res.data);
       })

@@ -1,14 +1,14 @@
 import axios from "axios";
 
-const headers = {
-  "content-type": "application/json",
-};
 
 const baseUrl = "http://localhost:8080/category";
 
-export const getAllCategory = () => {
+export const getAllCategory = (token) => {
   return axios({
-    headers: headers,
+    headers: {
+      "content-type": "application/json",
+      "Authorization": `Bearer ${token}`,
+    },
     url: baseUrl,
     method: "GET",
   });

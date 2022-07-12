@@ -2,6 +2,7 @@ import { Rating, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Button, Carousel } from "react-bootstrap";
 import { Link, useParams } from "react-router-dom";
+import { addProductToCart, getCartByAccId } from "../../service/CartService";
 import { getProductById } from "../../service/ProductService";
 import { addNewPost } from "../../service/RateService";
 
@@ -11,7 +12,7 @@ const ViewProduct = () => {
   const [newRate, setNewRate] = useState();
   const [newComment, setNewComment] = useState("");
   const [isLogin, setIsLogin] = useState(false);
-
+  const [quantity, setQuantity] = useState(1);
   const [success, setSuccess] = useState();
 
   useEffect(() => {
@@ -19,7 +20,6 @@ const ViewProduct = () => {
       getProductById(id)
         .then((res) => {
           setProduct(res.data);
-          console.log(res.data);
         })
         .catch((error) => {
           console.log(error);
@@ -45,6 +45,44 @@ const ViewProduct = () => {
       })
       .catch((error) => {
         setSuccess("You have reviewed this book before");
+      });
+  };
+
+  const addToCart = (e, id) => {
+    e.preventDefault();
+    let cartId = localStorage.getItem("cartId");
+    let accId = localStorage.getItem("accId");
+    let token = localStorage.getItem("token");
+    if (!accId) {
+      alert("Log In First");
+    }
+
+    if (!cartId) {
+      getCartByAccId(accId, token)
+        .then((res) => {
+          localStorage.setItem("cartId", res.data.id);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+
+    if (quantity === 0) {
+      alert("Quantity must not be 0");
+    }
+
+    const data = {
+      proId: id,
+      cartId: localStorage.getItem("cartId"),
+      quantity: quantity,
+    };
+
+    addProductToCart(data, token)
+      .then((res) => {
+        alert(res.data.message);
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
 
@@ -94,8 +132,20 @@ const ViewProduct = () => {
               </div>
               <div className="price fs-4 fw-bold">$ {product.price}</div>
             </div>
-            <div className="btn">
-              <Button variant="primary">Add To Cart</Button>
+            <div className="btn d-flex justify-content-start align-content-center">
+              <TextField
+                type="number"
+                label="Quantity"
+                value={quantity}
+                onChange={(e) => setQuantity(e.target.value)}
+                style={{ width: "5rem", marginRight: "1rem" }}
+              ></TextField>
+              <Button
+                variant="primary"
+                onClick={(e) => addToCart(e, product.proId)}
+              >
+                Add To Cart
+              </Button>
             </div>
           </div>
         </div>

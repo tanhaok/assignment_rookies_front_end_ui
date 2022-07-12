@@ -103,8 +103,6 @@ const CreateProduct = () => {
           console.log(err);
           setError(err.message);
         });
-
-      console.log(data);
     } else {
       setError("All fields are required!");
     }

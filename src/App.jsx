@@ -4,7 +4,7 @@ import { Admin, Home, SignIn, SignUp } from "./pages";
 
 import Layout from "./layout";
 import { ProductManage, CategoryManage } from "./pages/admin/Manage";
-import Cart from "./components/Cart";
+import Cart from "./pages/Cart";
 import ViewProduct from "./components/ViewProduct/";
 
 const App = () => {
@@ -24,9 +24,6 @@ const App = () => {
             <Route path="/cart" element={<Cart />} />
             <Route path="/home/:type" element={<Home />} />
             <Route path="/home/view/:id" element={<ViewProduct />} />
-            <Route path="/recommend" element={<p>recommend </p>} />
-            <Route path="/new_releases" element={<p>new release</p>} />
-            <Route path="/best_sellers" element={<p>Best seller</p>} />
           </Route>
         </Routes>
       </BrowserRouter>
