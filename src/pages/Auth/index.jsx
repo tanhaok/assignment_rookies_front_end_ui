@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, Navigate } from "react-router-dom";
 import { LogIn, Register } from "../../service/AccountService.js";
@@ -11,6 +11,10 @@ const SignIn = () => {
     formState: { errors },
   } = useForm();
   const [role, setRole] = useState();
+
+  useEffect(() => {
+    localStorage.clear();
+  }, []);
 
   const onSubmit = (data) => {
     LogIn(data)
