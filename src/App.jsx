@@ -1,19 +1,40 @@
 import React from "react";
-import { Button } from "react-bootstrap";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Admin, Home } from "./pages";
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {}
-  }
+import Layout from "./layout";
+import { Cart, Fiction, FictionType, NonFiction } from "./components";
+import { ProductManage, CategoryManage } from "./pages/admin/Manage";
 
-  render() {
-    return (
-      <div className="app">
-        <Button>hello world</Button>
-      </div>
-    );
-  }
-}
 
-export default  App;
+const App = () => {
+  return (
+    <div className="app">
+      <BrowserRouter>
+        <Routes>
+          <Route path="admin" element={<Admin />}>
+            <Route path="product" element={<ProductManage />} />
+            <Route path="category" element={<CategoryManage />} />
+          </Route>
+
+          <Route
+            path="auth"
+            element={<div> this is log in log out page </div>}
+          />
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/fiction" element={<Fiction />} />
+            <Route path="/fiction/:type" element={<FictionType />} />
+            <Route path="/nonfiction/:type" element={<NonFiction />} />
+            <Route path="/recommend" element={<p>recommend </p>} />
+            <Route path="/new_releases" element={<p>new release</p>} />
+            <Route path="/best_sellers" element={<p>Best seller</p>} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
+};
+
+export default App;
