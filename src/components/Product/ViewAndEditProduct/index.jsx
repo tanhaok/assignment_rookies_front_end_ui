@@ -64,7 +64,9 @@ const ViewAndEditProduct = (props) => {
         images: [...newImage],
       });
 
-      updateProduct(props.product.proId, data)
+      const token = localStorage.getItem("token");
+
+      updateProduct(props.product.proId, data, token)
         .then((res) => {
           setStep(1);
           setSuccess("Update success");
@@ -84,7 +86,8 @@ const ViewAndEditProduct = (props) => {
   };
 
   const handleChangeStatus = () => {
-    deleteProduct(props.product.proId)
+    const token = localStorage.getItem("token");
+    deleteProduct(props.product.proId , token)
       .then((res) => {
         let mess = res.data.status ? "TRADING" : "STOP TRADE";
         setSuccess(`Product status changed to ${mess} successfully`);

@@ -95,7 +95,9 @@ const CreateProduct = () => {
         images: [...urlImages],
       });
 
-      createProduct(data)
+      const token = localStorage.getItem("token");
+
+      createProduct(data, token)
         .then((res) => {
           setSuccess("success");
         })

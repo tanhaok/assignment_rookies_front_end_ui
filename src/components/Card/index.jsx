@@ -75,7 +75,7 @@ export const CardHorizontal = (props) => {
               {props.product.category.name}
             </h6>
             <h5 className="card-title">
-              {props.product.name} - {props.product.rate}
+              {props.product.name} - {Number.parseFloat(props.product.rate).toFixed(1)}
               <span className="fa fa-star star ms-1"></span>-
               <span className=" text-muted ms-1">
                 {props.product.status ? "On Trading" : "Stop Trade"}
